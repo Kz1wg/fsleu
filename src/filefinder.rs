@@ -1,16 +1,16 @@
 extern crate globmatch;
 use std::env;
-use std::io::{stdout, BufWriter, Write};
+use std::io::{BufWriter, Write, stdout};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Instant;
 
-use rustyline::history::FileHistory;
 use rustyline::Editor;
+use rustyline::history::FileHistory;
 
 use crossterm::{
-    terminal::{Clear, ClearType},
     ExecutableCommand,
+    terminal::{Clear, ClearType},
 };
 
 const DISPLAY_LIMIT: usize = 100;
@@ -95,25 +95,23 @@ impl FileFinder {
 
             output_buffer.flush()?;
 
-            match my_readline.readline("select number >>") {
-                Ok(rline) => match rline.as_str() {
-                    "q" | "quit" | "@q" | "@quit" => {
-                        break;
+            let rline = my_readline.readline("select number >>")?;
+
+            match rline.as_str() {
+                "q" | "quit" | "@q" | "@quit" => {
+                    break;
+                }
+
+                _ => match rline.parse::<usize>() {
+                    Ok(n) if n < self.stack_vec.len() => {
+                        opendir(&self.stack_vec[n])?;
+                    }
+                    Ok(_) => {
+                        println!("Wrong number.");
                     }
 
-                    _ => match rline.parse::<usize>() {
-                        Ok(n) if n < self.stack_vec.len() => {
-                            opendir(&self.stack_vec[n])?;
-                        }
-                        Ok(_) => {
-                            println!("Wrong number.");
-                        }
-
-                        Err(e) => println!("{e}"),
-                    },
+                    Err(e) => println!("{e}"),
                 },
-
-                Err(e) => return Err(e.into()),
             }
         }
         Ok(())
@@ -157,7 +155,7 @@ impl FileFinder {
                     println!("------------------------------------");
                     let end = Instant::now();
                     println!(
-                        "Search process took {} milliseconds",
+                        "Search process took {} ms.",
                         end.duration_since(start).as_millis()
                     );
                 }

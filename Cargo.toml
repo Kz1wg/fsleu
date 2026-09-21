@@ -1,12 +1,12 @@
 [package]
 name = "fsleu"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["KiwGucci<kiw.a.gucci@gmail.com>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-globmatch = "0.3.0"
-rustyline = "16.0.0"
+globmatch = "0.3.1"
+rustyline = "18.0.1"
 crossterm = "0.29.0"
